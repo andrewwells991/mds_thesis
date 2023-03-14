@@ -1,14 +1,14 @@
 # Process for data extraction and cleaning
 
-##AidData geocoded World Bank projects 
+**AidData geocoded World Bank projects** 
 In order to gain data on the location of development projects, I started with the AidData dataset of geocoded World Bank projects from 1995 to 2014. This dataset consisted 137,572 of geolocated sites, which were part of 5,881 of World Bank projects in 151 countries. In addition to geocoded information (latitude and longitude points), the dataset consisted of approximately 200 variables, including the start and end dates of the projects, the World Bank team lead on the project, the project sectors and goals, financial disbursement details, and the Independent Evaluation Group (IEG) evaluations of the projects. 
 
 As I was only interested in World Bank sites taking place in Malawi, I filtered for only those projects in that country. This consisted of 58 projects. Details on how the AidData data was joined and cleaned is in the script: **1_aiddata_world_bank_geo.Rmd** in this repository.
 
-##World Bank projects in Malawi
+**World Bank projects in Malawi**
 I then downloaded and cleaned data on all World Bank projects from the World Bank website. This dataset included information on the total project costs and descriptions of the project development objectives. Details on how the AidData data was joined and cleaned is in the script: **2_world_bank_malawi_cleaning.Rmd** in this repository.
 
-##Joining World Bank Malawi datasets
+**Joining World Bank Malawi datasets**
 I joined the cleaned AidData dataset with the World Bank Malawi data. Joining this data resulted in a dataset of geocoded World Bank projects in Malawi between 1995 and 2014 with information on start dates, end dates, sectors, development objectives, IEG evaluation, and the project costs. Details on how the AidData data was joined and cleaned is in the script: **3_malawi_wb_geolocated.Rmd** in this repository.
 
 I filtered out invalid points and duplicated coordinates for the same projects. I also reduced the dataset to only projects that were locally focused (not focusing at central government level reform) and that could arguably generate economic expansion, such as infrastructure and social capacity building projects. This resulted in the dataset consisting of 5 unique projects: 
