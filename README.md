@@ -52,7 +52,7 @@ Data for each pixel within the images consisted of the band values for that pixe
 
 I therefore had the buildings data, which gave the polygon coordinates or each building, in the regions of interest and the pixel data for a Sentinel-2 image for those ROIs in August 2021. I then joined the datasets based on the coordinate points for the pixels being within the polygon coordinates. This identified each pixel within each Sentinel-2 image (August 2021) as being part of a building or not part of a building. I created a new variable based on this information: “building”. Pixels that were part of a building were labeled building = 1, and those not part of a building were labeled building = 0. 
 
-This yielded labelled data sets with pixel information: coordinates, band data and building, which could be used to predict building based on the band values. The code for cleaning the pixel and buildings datasets and joining the data based on pixels (coordinate points) within buildins (coordinate polygons) is detailed in the script: **7_pixel_ob_cleaning_merging.ipynb** in this repository.
+This yielded labelled data sets with pixel information: coordinates, band data and building, which could be used to predict building based on the band values. The code for cleaning the pixel and buildings datasets and joining the data based on pixels (coordinate points) within buildins (coordinate polygons) is detailed in the script: **7_pixel_ob_cleaning_merging.ipynb** in this repository. The combined pixel and building data for each project ROI are stored in datasets in the folder **combined_pixel_ob** in this repository.
 
 **Machine learning**
 
