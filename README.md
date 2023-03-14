@@ -12,7 +12,7 @@ I then downloaded and cleaned data on all World Bank projects from the World Ban
 
 **Joining World Bank Malawi datasets**
 
-I joined the cleaned AidData dataset with the World Bank Malawi data. Joining this data resulted in a dataset of geocoded World Bank projects in Malawi between 1995 and 2014 with information on start dates, end dates, sectors, development objectives, IEG evaluation, and the project costs. Details on how the AidData data was joined and cleaned is in the script: **3_malawi_wb_geolocated.Rmd** in this repository.
+I joined the cleaned AidData dataset with the World Bank Malawi data. Joining this data resulted in a dataset of geocoded World Bank projects in Malawi between 1995 and 2014 with information on start dates, end dates, sectors, development objectives, IEG evaluation, and the project costs.
 
 I filtered out invalid points and duplicated coordinates for the same projects. I also reduced the dataset to only projects that were locally focused (not focusing at central government level reform) and that could arguably generate economic expansion, such as infrastructure and social capacity building projects. This resulted in the dataset consisting of 5 unique projects: 
 1.	Road Maintenance Rehabilitation Project (P001666); 
@@ -33,6 +33,8 @@ The resulting dataset consisted of 85 sites within 5 World Bank projects along w
 - IEG evaluation
 -	Geocoded point (latitude and longitude)
 -	Polygon coordinates of a 1 square kilometer rectangle around the point
+
+Details on how the AidData data was joined and cleaned is in the script: **3_malawi_wb_geolocated.Rmd** in this repository.
 
 Open Buildings was an initiative for which experiments were carried out using a dataset of 100k satellite images across Africa containing 1.75M manually labelled building instances, and further datasets for pre-training and self-training. Novel methods for improving performance of building detection with this type of model, including the use of mixup (mAP +0.12) and self-training with soft KL loss (mAP +0.06). The resulting pipeline obtains good results even on a wide variety of challenging rural and urban contexts, and was used to create the Open Buildings dataset of 516M Africa-wide detected footprints (Sirko et al. 2021). The polygon coordinates for the buildings are identified. These buildings were assumed to be present at the time of this research, 2021. From the Open Buildings database, I downloaded the data on all identified buildings in Malawi. 
 
