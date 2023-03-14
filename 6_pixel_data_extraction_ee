@@ -1,0 +1,52 @@
+// **Change project and site numbers**//
+// Change to September for 2_18, 2_24
+
+var s2 = ee.ImageCollection('COPERNICUS/S2_HARMONIZED');
+var roi = ee.Geometry.Polygon([
+[[34.9302311628534, -15.64282], [34.9488888371466, -15.64282], [34.9488888371466, -15.65182], [34.9302311628534, -15.65182]]
+]);
+
+var visParam = {
+  'bands': ['B4', 'B3', 'B2'], 
+  'min': 0,
+  'max': 3000
+};
+
+var aug_21 = s2
+  .filter(ee.Filter.date('2021-08-01', '2021-08-30'))
+  .sort("CLOUD_COVERAGE_ASSESSMENT")
+  .filter(ee.Filter.bounds(roi))
+  .first()
+  .clip(roi);
+
+Map.addLayer(aug_21, visParam, "Aug 21");
+Map.centerObject(roi, 16)
+Map.setOptions('SATELLITE');
+
+// Dictionary with bands for keys and list of pixels values for value
+var pixelsDict = aug_21
+  .select(['B2', 'B3', 'B4', 'B8', 'B11', 'B12'])
+  .addBands(ee.Image.pixelLonLat()).reduceRegion({
+  reducer: ee.Reducer.toList(), 
+  geometry: roi, 
+  scale: 10})
+
+var bandNames = pixelsDict.keys()
+
+// List of pixels, containing a list of band values
+var pixels = ee.Array(pixelsDict.values()).transpose().toList() 
+var table = ee.FeatureCollection(
+  pixels.map(function (bandValues) {
+    var properties = ee.Dictionary.fromLists(
+      bandNames, ee.Array(bandValues).toList())
+    var geometry = ee.Geometry.Point(
+      properties.getNumber('longitude'),
+      properties.getNumber('latitude'))
+    return ee.Feature(geometry, properties)}))
+
+Export.table.toDrive({
+  collection: table, 
+  description: 'proj_2_28_aug_21_pixel', 
+  folder: '2_ee_pixel_data',
+  // Columns to include. Add longitude and latitude if you want
+  selectors: ['B2', 'B3', 'B4', 'B8', 'B11', 'B12', 'latitude', 'longitude']})
