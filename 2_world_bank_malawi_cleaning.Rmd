@@ -1,0 +1,61 @@
+---
+title: "Untitled"
+author: "Andrew Wells"
+date: "2/1/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(janitor)
+library(readxl)
+library(tidyverse)
+```
+
+```{r}
+#Dataset on World Bank projects in Malawi. Downloaded from World Bank Malawi website: https://projects.worldbank.org/en/projects-operations/projects-list?lang=en&countrycode_exact=MW&os=0
+
+df_m <- read_excel("~/Desktop/Semester 6/Thesis/world_bank_projects/country_data/malawi.xlsx") %>%
+  row_to_names(row_number = 1)
+
+names(df_m) <- tolower(names(df_m))
+names(df_m) <- gsub(" ", "_", names(df_m))
+```
+
+```{r}
+#Cleaning data
+df_mal <- df_m %>%
+  unite("sectors_all", sector_1:sector_2:sector_3, sep= "; ", 
+        remove = FALSE)
+
+df_mal$sectors_all <-  sub("; NA", "", df_mal$sectors_all)
+df_mal$sectors_all <-  sub("; NA", "", df_mal$sectors_all) #Run twice to delete second NAs
+
+#Cleaning dates column
+df_mal$board_approval_date <- strptime(as.character(df_mal$board_approval_date), "%Y-%m-%d")
+df_mal$board_approval_date <- as.character(df_mal$board_approval_date)
+
+df_mal$project_closing_date <- format(as.POSIXct(df_mal$project_closing_date,
+                                 format = '%m/%d/%Y %H:%M:%S'),
+                                 format = "%Y-%m-%d")
+
+df_mal$time <- difftime(df_mal$project_closing_date, df_mal$board_approval_date, )
+
+df_mal$total_ida_and_ibrd_commitment <- as.numeric(df_mal$total_ida_and_ibrd_commitment)
+df_mal$current_project_cost <- as.numeric(df_mal$current_project_cost)
+
+df_mal <- df_mal %>%
+  mutate(diff = total_ida_and_ibrd_commitment - current_project_cost)
+```
+
+```{r}
+#Eliminating uninformative variables
+mal <- df_mal %>%
+  select(-c(region, country, project_url, sector_1, sector_2, sector_3, theme_1, theme_2))
+```
+
+```{r}
+#Save file
+write_csv(mal, "~/Desktop/Semester 6/Thesis/world_bank_projects/world_bank_geo_projects/data/world_bank_malawi.csv")
+```

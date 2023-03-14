@@ -1,0 +1,156 @@
+---
+title: "Untitled"
+author: "Andrew Wells"
+date: "2/1/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(janitor)
+library(readxl)
+library(tidyverse)
+```
+
+```{r}
+#Load cleaned geolocated data (for all World Bank projects 1995 - 2014) (from AidData)
+##Cleaned in script: 1_aiddata_world_bank_geo.RMD
+m <- read_csv("~/Desktop/Semester 6/Thesis/world_bank_projects/world_bank_geo_projects/data/aiddata_malawi_wb_geo.csv")
+
+#Load cleaned World Bank Malawi projects (from World Bank website)
+##Cleaned in script: 2_world_bank_malawi_cleaning
+mal <- read_csv("~/Desktop/Semester 6/Thesis/world_bank_projects/world_bank_geo_projects/data/world_bank_malawi.csv")
+```
+
+```{r}
+#Joining Malawi infrastructure project (from WB website) with Malawi geolocated projects (from AidData)
+joined_df <- merge(mal, m, by.x = "project_id", 
+             by.y = "project_id", all.x = TRUE, all.y = FALSE)
+
+#Deleting duplicated columns (project_name and project_status)
+joined_df <- joined_df %>%
+  select(-c(project_name.y, project_status.y)) %>%
+  rename(project_name = project_name.x) %>%
+  rename(project_status = project_status.x)
+```
+
+```{r}
+#Adding coordinates column to get rectangles around points
+
+joined_df <- joined_df %>%
+  mutate(lat_n = latitude + 0.0045) %>%
+  mutate(lat_s = latitude - 0.0045) %>%
+  mutate(long_e = longitude + (1/(111.32 * cos(latitude * (pi/180))))) %>%
+  mutate(long_w = longitude - (1/(111.32 * cos(latitude * (pi/180))))) %>%
+  mutate(nw = paste(long_w, lat_n, sep = ", ")) %>%
+  mutate(ne = paste(long_e, lat_n, sep = ", ")) %>%
+  mutate(se = paste(long_e, lat_s, sep = ", ")) %>%
+  mutate(sw = paste(long_w, lat_s, sep = ", ")) %>%
+  mutate(nw2 = paste0('[',nw,']')) %>%
+  mutate(ne2 = paste0('[',ne,']')) %>%
+  mutate(se2 = paste0('[',se,']')) %>%
+  mutate(sw2 = paste0('[',sw,']')) %>%
+  unite(col = "coor_del", nw2:sw2, sep = ", ") %>%
+  mutate(rec_coords = paste0('[',coor_del,']')) %>%
+  select(-c(coor_del, nw, ne, se, sw)) 
+```
+
+```{r}
+#Filter for invalid coordinates
+joined_df <- joined_df %>%
+  drop_na(latitude) %>%
+  filter(latitude != -13.5) %>%
+  filter(latitude != -12) %>%
+  filter(latitude != -15.5) %>%
+  filter(latitude != -16.75) %>%
+  filter(latitude != -13) %>%
+  filter(latitude != -14.75) %>%
+  filter(latitude != -11.9) %>%
+  filter(latitude != -11)
+
+#Removing duplicated sites for same project
+joined_df <- joined_df %>%
+  group_by(project_id) %>%
+  distinct(rec_coords, .keep_all = TRUE)
+```
+
+```{r}
+#Create project and site number columns for identification
+joined_df <- joined_df %>% 
+  group_by(project_id) %>%
+  mutate(project_no = cur_group_id()) %>%
+  relocate(project_no, .before = project_id) %>% 
+  group_by(project_id) %>% 
+  mutate(site_no = row_number()) %>%
+  relocate(site_no, .after = project_no)
+```
+
+```{r}
+#Create variable for unique site identified under each project
+joined_df <- joined_df %>%
+  mutate(project_site = paste(project_no, site_no, sep="_")) %>%
+  relocate(project_site, .before = project_id)
+```
+
+```{r}
+#Create variable which shows duplicated roi
+joined_df$dup_of <- duplicated(joined_df$rec_coords) * (match(joined_df$rec_coords, unique(joined_df$rec_coords)))
+
+#Variable that counts rows (for reference to function above)
+joined_df <- joined_df %>%
+  mutate(count = row_number())
+```
+
+```{r}
+#Create values to put into identify as region of interest in Python for filtering Open Buildings data
+joined_df$lat_n_py <- paste0("proj_", joined_df$project_no,"_", joined_df$site_no," = ob_malawi[(ob_malawi['latitude'] <= ", joined_df$lat_n, ") &")
+joined_df$lat_s_py <- paste0("(ob_malawi['latitude'] >= ", joined_df$lat_s, ") &")
+joined_df$long_e_py <- paste0("(ob_malawi['longitude'] <= ", joined_df$long_e, ") &")
+joined_df$long_w_py <- paste0("(ob_malawi['longitude'] >= ", joined_df$long_w, ")].copy()")
+
+joined_df$goog1 <- paste0("proj_", joined_df$project_no, "_", joined_df$site_no, ".to_csv('proj_", joined_df$project_no, "_", joined_df$site_no,"_open_buildings.csv', encoding = 'utf-8-sig')")
+joined_df$goog2 <- paste0("files.download('proj_", joined_df$project_no,"_", joined_df$site_no, "_open_buildings.csv')")
+```
+
+```{r}
+#Reducing for just projects of interest
+proj_interest <- joined_df %>%
+  filter(project_id != 'P001664' & 
+           project_id != 'P001667' &
+           project_id != 'P001670' &
+           project_id != 'P036038' &
+           project_id != 'P070823' &
+           project_id != 'P073309' &
+           project_id != 'P075911' &
+           project_id != 'P080368' &
+           project_id != 'P096336' &
+           project_id != 'P099626' &
+           project_id != 'P117617' &
+           project_id != 'P121065' &
+           project_id != 'P122616' &
+           project_id != 'P124486' &
+           project_id != 'P125237' &
+           project_id != 'P128576' &
+           project_id != 'P131648' &
+           project_id != 'P133620' &
+           project_id != 'P131660')
+
+proj_interest_reduced <- proj_interest %>%
+  select(project_no, site_no, project_site, project_name, project_development_objective, board_approval_date, project_closing_date, current_project_cost, sectors_all, ieg_outcome, latitude, longitude, lat_n, lat_s, long_e, long_w, rec_coords, dup_of, count, lat_n_py, lat_s_py, long_e_py, long_w_py, goog1, goog2)
+
+#Reduce columns to make filter for region of interest easier
+reduced_df <- proj_interest_reduced %>%
+  select(lat_n_py, lat_s_py, long_e_py, long_w_py, goog1, goog2, dup_of, count)
+```
+
+```{r}
+write_csv(joined_df, "~/Desktop/Semester 6/Thesis/2_malawi_wb_geo_clean/malawi_wb_geo_clean.csv")
+write_csv(proj_interest_reduced, "~/Desktop/Semester 6/Thesis/2_malawi_wb_geo_clean/malawi_wb_proj_int_geo_clean.csv")
+write_csv(reduced_df, "~/Desktop/Semester 6/Thesis/2_malawi_wb_geo_clean/reduced_malawi_wb_geo_clean.csv")
+```
+
+```{r}
+joined_df <- read_csv("~/Desktop/Semester 6/Thesis/malawi_wb_geo_clean/malawi_wb_geo_clean.csv")
+```
+

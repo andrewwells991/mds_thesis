@@ -1,0 +1,154 @@
+---
+title: "wb_projects"
+author: "Andrew Wells"
+date: "12/26/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+library(tidyverse)
+```
+
+```{r}
+#Individual datasets on World Bank projects (1995 - 2014) with geocoded project data. Downloaded from the AidData website: https://www.aiddata.org/data/world-bank-geocoded-research-release-level-1-v1-4-2
+
+locations <- read_csv("~/Desktop/Semester 6/Thesis/world_bank_projects/world_bank_geo_projects/data/locations.csv")
+projects <- read_csv("~/Desktop/Semester 6/Thesis/world_bank_projects/world_bank_geo_projects/data/projects.csv")
+projects_ancillary <- read_csv("~/Desktop/Semester 6/Thesis/world_bank_projects/world_bank_geo_projects/data/projects_ancillary.csv")
+transactions <- read_csv("~/Desktop/Semester 6/Thesis/world_bank_projects/world_bank_geo_projects/data/transactions.csv")
+```
+
+```{r}
+#Joining dfs
+d <- projects_ancillary %>%
+  rename(project_id = "PROJECT ID") %>%
+  left_join(locations, by = "project_id") %>%
+  left_join(projects, by = "project_id") %>%
+  left_join(transactions, by = "project_id")
+
+#Cleaning variable names
+names(d) <- tolower(names(d))
+names(d) <- gsub(" ", "_", names(d))
+```
+
+```{r}
+#Fixing approval_date bug
+d$approval_date <- str_replace(d$approval_date, "0098", "1998")
+
+#Cleaning approval and closing dates
+
+#Cleaning approval dates
+d$approval_year <- str_sub(d$approval_date,8,11) #Extracting year
+d$approval_month <- str_sub(d$approval_date,4,6) #Extracting month
+d$approval_day <- str_sub(d$approval_date,1,2) #Extracting day
+
+d%>%
+  select(approval_year, approval_month, approval_day, approval_date)
+
+#Changing approval_month to numeric
+d$approval_month <- str_replace(d$approval_month, "JAN", "01")
+d$approval_month <- str_replace(d$approval_month, "Jan", "01") #Some January written with lower
+d$approval_month <- str_replace(d$approval_month, "FEB", "02")
+d$approval_month <- str_replace(d$approval_month, "MAR", "03")
+d$approval_month <- str_replace(d$approval_month, "APR", "04")
+d$approval_month <- str_replace(d$approval_month, "MAY", "05")
+d$approval_month <- str_replace(d$approval_month, "JUN", "06")
+d$approval_month <- str_replace(d$approval_month, "JUL", "07")
+d$approval_month <- str_replace(d$approval_month, "AUG", "08")
+d$approval_month <- str_replace(d$approval_month, "SEP", "09")
+d$approval_month <- str_replace(d$approval_month, "OCT", "10")
+d$approval_month <- str_replace(d$approval_month, "NOV", "11")
+d$approval_month <- str_replace(d$approval_month, "DEC", "12")
+
+#Combining year-month-day
+d <- d %>%
+  unite("approval_date2", approval_year:approval_month:approval_day, sep= "-", 
+        remove = FALSE)
+
+#Making a date
+d$approval_date2 <- as.Date(d$approval_date2)
+
+#Removing unneccessary variables
+d <- d %>%
+  select(-c(approval_date, approval_year, approval_month, approval_day)) %>%
+  rename(approval_date = approval_date2)
+
+
+#Cleaning closing dates
+d$closing_year <- str_sub(d$closing_date,8,11) #Extracting year
+d$closing_month <- str_sub(d$closing_date,4,6) #Extracting month
+d$closing_day <- str_sub(d$closing_date,1,2) #Extracting day
+
+d%>%
+  select(closing_year, closing_month, closing_day, closing_date)
+
+d$closing_month <- str_replace(d$closing_month, "JAN", "01")
+d$closing_month <- str_replace(d$closing_month, "Jan", "01") #Some January written with lower
+d$closing_month <- str_replace(d$closing_month, "FEB", "02")
+d$closing_month <- str_replace(d$closing_month, "MAR", "03")
+d$closing_month <- str_replace(d$closing_month, "APR", "04")
+d$closing_month <- str_replace(d$closing_month, "MAY", "05")
+d$closing_month <- str_replace(d$closing_month, "JUN", "06")
+d$closing_month <- str_replace(d$closing_month, "JUL", "07")
+d$closing_month <- str_replace(d$closing_month, "AUG", "08")
+d$closing_month <- str_replace(d$closing_month, "SEP", "09")
+d$closing_month <- str_replace(d$closing_month, "OCT", "10")
+d$closing_month <- str_replace(d$closing_month, "NOV", "11")
+d$closing_month <- str_replace(d$closing_month, "DEC", "12")
+
+#Combining year-month-day
+d <- d %>%
+  unite("closing_date2", closing_year:closing_month:closing_day, sep= "-", 
+        remove = FALSE)
+
+#Making a date
+d$closing_date2 <- as.Date(d$closing_date2)
+
+#Removing unneccessary variables
+d <- d %>%
+  select(-c(closing_date, closing_year, closing_month, closing_day)) %>%
+  rename(closing_date = closing_date2)
+
+#Making sure set as date variables
+d$approval_date <- format(as.POSIXct(d$approval_date,
+                                 format = '%Y-%m-%d'),
+                                 format = "%Y-%m-%d")
+
+d$closing_date <- format(as.POSIXct(d$closing_date,
+                                 format = '%Y-%m-%d'),
+                                 format = "%Y-%m-%d")
+
+d$start_actual_isodate <- format(as.POSIXct(d$start_actual_isodate,
+                                 format = '%Y-%m-%d'),
+                                 format = "%Y-%m-%d")
+
+d$end_actual_isodate <- format(as.POSIXct(d$end_actual_isodate,
+                                 format = '%Y-%m-%d'),
+                                 format = "%Y-%m-%d")
+```
+
+```{r}
+#Creating variables for delayed start and end
+d$delayed_start_days <- difftime(d$start_actual_isodate, d$approval_date, units="days")
+
+d$delayed_end_days <- difftime(d$end_actual_isodate, d$closing_date, units="days")
+```
+
+```{r}
+#Save file
+write_csv(d, "~/Desktop/Semester 6/Thesis/world_bank_projects/world_bank_geo_projects/data/combined_wb_geo.csv")
+```
+
+
+
+
+
+
+
+
+
