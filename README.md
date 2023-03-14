@@ -36,7 +36,7 @@ The resulting dataset consisted of 85 sites within 5 World Bank projects along w
 
 Details on how the AidData data was joined and cleaned is in the script: **3_malawi_wb_geolocated.Rmd** in this repository.
 
-**Open Buildings data
+**Open Buildings data**
 
 Open Buildings was an initiative for which experiments were carried out using a dataset of 100k satellite images across Africa containing 1.75M manually labelled building instances, and further datasets for pre-training and self-training. The Open Buildings dataset consists of 516M Africa-wide detected buildings (Sirko et al. 2021). The data consists of polygon coordinates for identified buildings. These buildings were assumed to be present at the time of this research, 2021. From the Open Buildings database, I downloaded the data on all identified buildings in Malawi. Details on how the Open Buildings data was joined and cleaned for data on buildings in Malawi is in the script: **4_open_buildings_cleaning_malawi.ipynb** in this repository. The data for buildings in Malawi was saved in Google Drive as open_buildings_malawi.csv.
 
