@@ -2,7 +2,7 @@
 
 Process for data extraction and cleaning
 
-In order to gain data on the location of development projects, I started with the AidData dataset of geocoded World Bank projects from 1995 to 2014. This dataset consisted xx number of geolocated sites, which were part of xx of World Bank projects in xx countries. In addition to geocoded information (latitude and longitude points), the dataset consisted of xx other variables, including the start and end dates of the projects and the Independent Evaluation Group (IEG) evaluations of the projects.
+In order to gain data on the location of development projects, I started with the AidData dataset of geocoded World Bank projects from 1995 to 2014. This dataset consisted 137,572 of geolocated sites, which were part of 5,881 of World Bank projects in 151 countries. In addition to geocoded information (latitude and longitude points), the dataset consisted of approximatelt 203 variables, including the start and end dates of the projects and the Independent Evaluation Group (IEG) evaluations of the projects.
 
 As I was only interested in World Bank sites taking place in Malawi, I filtered for only those projects in that country.
 
