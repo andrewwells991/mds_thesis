@@ -2,27 +2,29 @@
 
 Process for data extraction and cleaning
 
-In order to gain data on the location of development projects, I started with the AidData dataset of geocoded World Bank projects from 1995 to 2014. This dataset consisted 137,572 of geolocated sites, which were part of 5,881 of World Bank projects in 151 countries. In addition to geocoded information (latitude and longitude points), the dataset consisted of approximatelt 203 variables, including the start and end dates of the projects and the Independent Evaluation Group (IEG) evaluations of the projects.
+In order to gain data on the location of development projects, I started with the AidData dataset of geocoded World Bank projects from 1995 to 2014. This dataset consisted 137,572 of geolocated sites, which were part of 5,881 of World Bank projects in 151 countries. In addition to geocoded information (latitude and longitude points), the dataset consisted of approximately 200 variables, including the start and end dates of the projects, the World Bank team lead on the project, the project sectors and goals, financial disbursement details, and the Independent Evaluation Group (IEG) evaluations of the projects. Details on how AidData data was joined and cleaned is in the script: 1_aiddata_world_bank_geo.Rmd in this repository.
 
-As I was only interested in World Bank sites taking place in Malawi, I filtered for only those projects in that country.
+As I was only interested in World Bank sites taking place in Malawi, I filtered for only those projects in that country. This consisted of 58 projects.
 
-I joined this geocoded data with the data on projects in Malawi from the World Bank website. This dataset included information on the total project costs. Joining this data resulted in a dataset of geocoded World Bank projects in Malawi between 1995 and 2014 with information on start dates, end dates, IEG evaluation and the project costs.
+I joined this geocoded data with the data on projects in Malawi from the World Bank website. This dataset included information on the total project costs and descriptions of the project development objectives. Joining this data resulted in a dataset of geocoded World Bank projects in Malawi between 1995 and 2014 with information on start dates, end dates, sectors, development objectives, IEG evaluation, and the project costs.
 
 I filtered out invalid points and duplicated coordinates for the same projects. I also reduced the dataset to only projects that were locally focused (not focusing at central government level reform) and that could arguably generate economic expansion, such as infrastructure and social capacity building projects. This resulted in the dataset consisting of 5 unique projects: 
-1.	Road Maintenance Rehabilitation Project; 
-2.	Social Action Fund; Infrastructure Services; 
+1.	Road Maintenance Rehabilitation Project (P001666); 
+2.	Social Action Fund; Infrastructure Services (P001668); 
 3.	Community-Based Rural Land Development Project (P075247); 
-4.	Irrigation, Rural Livelihoods and Agricultural Development Project; 
+4.	Irrigation, Rural Livelihoods and Agricultural Development Project (P084148); 
 5.	Community Based Rural Development Project (P115226)
 
-There were ~85 geocoded locations in total from these projects. Finally, I added a variable which identified the four geocoded points of a 1 square kilometer rectangle with the original geocoded point as the center. This is to have a region of interest in order to study building development within proximity to the geocoded project site.
+There were 85 geocoded locations in total from these projects. Finally, I added a variable which identified the four geocoded points of a 1 square kilometer rectangle with the original geocoded point as the center. This is to have a region of interest in order to study building development within proximity to the geocoded project site.
 
 The resulting dataset consisted of 85 sites within 5 World Bank projects along with the following variables for each project site:
 -	Project name
 -	Project description/objective
 -	Project Start date
 -	Project end date
+- project sector
 -	Project cost
+- IEG evaluation
 -	Geocoded point (latitude and longitude)
 -	Polygon coordinates of a 1 square kilometer rectangle around the point
 
