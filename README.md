@@ -42,6 +42,9 @@ Open Buildings was an initiative for which experiments were carried out using a 
 
 Using the coordinates of the 1 square kilometer around the project locations, I extracted data on the location of buildings (in 2021) for each 1 square kilometer region of interest. I only used data for regions of interest with at least 200 identified buildings. Details on how the Open Buildings data was reduced for the region of interest (roi) around each World Bank project site is in the script: **5_open_buildings_projects_sites_malawi_roi.ipynb** in this repository. The Open Buildings data for buildings in each project ROI are stored in datasets in the folder **open_buildings** in this repository.
 
+Screen Shot 2023-03-16 at 4.39.51 PM<img width="1128" alt="image" src="https://user-images.githubusercontent.com/78730842/225671256-29b7ab44-4bf7-43b2-8c65-75b2bfefc292.png">
+
+
 **Pixel data**
 
 Using the Google Earth Engine API, I then downloaded the pixel data for August 2021 Sentinel-2 satellite images for each of the corresponding regions of interest. August was chosen because it is the least cloudy month in Malawi and 2021 because this was the year that buildings were identified by the Open Buildings research. Sentinel-2 images have 10-meter resolution (each pixel represents 10 square meters). Sentinel-2 images were chosen over other publicly accessible images, such as Landsat-8 or Landsat-9, because these satellites produce 30-meter resolution images. Each of the images of the regions of interest consist of approximately 20,000 pixels. The code for downloading the pixel data for an individual ROI is detailed in the script: **6_pixel_data_extraction_ee** in this repository. Keep in mind that this is Java Script to be used within the Google Earth Engine Code Editor. For information on how to register for the Earth Engine API and access data through the Code Editor, visit: https://earthengine.google.com/platform/.
