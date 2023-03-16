@@ -45,7 +45,9 @@ Using the coordinates of the 1 square kilometer around the project locations, I 
 Google Earth Satellite image with Open Buildings Overlay
 <img width="974" alt="image" src="https://user-images.githubusercontent.com/78730842/225680043-384b97e6-962b-43e9-9dee-105cc8de0e20.png">
 Green represents buildings identified with over 70% confidence.
+
 Yellow represents buildings identified with 65 - 70% confidence.
+
 Red represents buildings identified with 60 - 65% confidence.
 
 **Pixel data**
@@ -63,6 +65,7 @@ This yielded labelled data sets with pixel information: coordinates, band data a
 Google earth Satellite image with Open Buildings Overlay and pixels
 <img width="975" alt="image" src="https://user-images.githubusercontent.com/78730842/225679609-d9cccc10-d749-4885-80f0-b71986cecdb4.png">
 Black dots represent pixels not part of a building.
+
 Blue dots represent pixels part of a building.
 
 **Machine learning**
