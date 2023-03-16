@@ -42,7 +42,10 @@ Open Buildings was an initiative for which experiments were carried out using a 
 
 Using the coordinates of the 1 square kilometer around the project locations, I extracted data on the location of buildings (in 2021) for each 1 square kilometer region of interest. I only used data for regions of interest with at least 200 identified buildings. Details on how the Open Buildings data was reduced for the region of interest (roi) around each World Bank project site is in the script: **5_open_buildings_projects_sites_malawi_roi.ipynb** in this repository. The Open Buildings data for buildings in each project ROI are stored in datasets in the folder **open_buildings** in this repository.
 
-Google Earth Satellite image with Open Buildings Overlay<img width="1128" alt="image" src="https://user-images.githubusercontent.com/78730842/225671256-29b7ab44-4bf7-43b2-8c65-75b2bfefc292.png">
+Google Earth Satellite image with Open Buildings Overlay
+Screen Shot 2023-03-16 at 5.01.01 PM<img width="974" alt="image" src="https://user-images.githubusercontent.com/78730842/225680043-384b97e6-962b-43e9-9dee-105cc8de0e20.png">
+
+
 
 
 **Pixel data**
@@ -56,6 +59,9 @@ Data for each pixel within the images consisted of the band values for that pixe
 I therefore had the buildings data, which gave the polygon coordinates or each building, in the regions of interest and the pixel data for a Sentinel-2 image for those ROIs in August 2021. I then joined the datasets based on the coordinate points for the pixels being within the polygon coordinates. This identified each pixel within each Sentinel-2 image (August 2021) as being part of a building or not part of a building. I created a new variable based on this information: “building”. Pixels that were part of a building were labeled building = 1, and those not part of a building were labeled building = 0. 
 
 This yielded labelled data sets with pixel information: coordinates, band data and building, which could be used to predict building based on the band values. The code for cleaning the pixel and buildings datasets and joining the data based on pixels (coordinate points) within buildins (coordinate polygons) is detailed in the script: **7_pixel_ob_cleaning_merging.ipynb** in this repository. The combined pixel and building data for each project ROI are stored in datasets in the folder **combined_pixel_ob** in this repository.
+
+Screen Shot 2023-03-16 at 4.59.50 PM<img width="975" alt="image" src="https://user-images.githubusercontent.com/78730842/225679609-d9cccc10-d749-4885-80f0-b71986cecdb4.png">
+
 
 **Machine learning**
 
