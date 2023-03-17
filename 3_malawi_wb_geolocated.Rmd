@@ -15,8 +15,9 @@ library(tidyverse)
 
 ```{r}
 #Load cleaned geolocated data (for all World Bank projects 1995 - 2014) (from AidData)
-##Cleaned in script: 1_aiddata_world_bank_geo.RMD
-m <- read_csv("~/Desktop/Semester 6/Thesis/world_bank_projects/world_bank_geo_projects/data/aiddata_malawi_wb_geo.csv")
+##Cleaned in script: 1_aiddata_world_bank_geo.RMD. Filter for Malawi
+m <- read_csv("~/Desktop/Semester 6/Thesis/world_bank_projects/world_bank_geo_projects/data/combined_wb_geo.csv") %>%
+  filter(country == "Malawi")
 
 #Load cleaned World Bank Malawi projects (from World Bank website)
 ##Cleaned in script: 2_world_bank_malawi_cleaning
