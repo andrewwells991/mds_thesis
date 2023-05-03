@@ -89,6 +89,8 @@ The combined pixel-building datasets for each of the ROIs were combined to make 
 
 The figure below demonstrates the average band values for pixels which are part of buildings and not part of buildings. As shown, the blue (B2), green (B3), red (B4) and short-wave infrared 1 (B12) values are all on average higher for pixels that are part of buildings as opposed to those not part of buildings. The near infrared (B8) and short-wave infrared 1 (B11) are on average the same for the different pixel categorizations. The following figure also shows the distribution of band values for pixels labelled building and non-building. 
 
+Average spectral band values by building label
+<img width="975" alt="image" src=https://user-images.githubusercontent.com/78730842/235947160-1d0e6962-bb0c-4517-8b7c-08f9722e6c0b.png>
 
 
 **Machine learning**
