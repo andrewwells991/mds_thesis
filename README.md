@@ -141,12 +141,15 @@ I was also curious if models trained based on urbanity would better predict buil
 I first tested the models that were trained on the imbalanced data. The test data, which was 20% of the original dataset, consisted of 334,707 observations, 13,673 (4.259%) were positive observations (building  = 1).  The table below shows four different evaluation metrics for each of the models.
 
 Results table for text evaluations on imbalanced data
-<img width="412" alt="test_eval_tb" src="https://user-images.githubusercontent.com/78730842/236181052-4c185450-9ea8-4092-bd0c-95e7f7e813b1.png">
+<img width="700" alt="test_eval_tb" src="https://user-images.githubusercontent.com/78730842/236181052-4c185450-9ea8-4092-bd0c-95e7f7e813b1.png">
 
+As the data was highly imbalanced, I was concerned that the models would under-predict positive observations. This would lead to models that systematically underestimate the number of buildings in unseen images. Based on the results shown in the table above, this was the case. All of the models had high accuracy on the test data; naïve Bayes was the lowest with 0.92 and the rest had 0.96, but this high accuracy was likely to do with the data being highly imbalanced. The precision, recall and F1-scores for positive observations were very low. The fact that the precision scores were higher than the recall scores for all of the models, except naïve Bayes, shows that the instances of false negative were higher than the instances of false positives.
 
+As mentioned above, I also evaluated the models based on the areas under the precision-recall and ROC curves. The results of evaluations can be seen in the figures below.
 
+<img width="700" alt="image" src=https://user-images.githubusercontent.com/78730842/236189923-421a0f0b-d53b-49df-b6e8-ffddcb6386be.png>
 
-
+<img width="700" alt="image" src=https://user-images.githubusercontent.com/78730842/236190049-b560ac78-25f0-464d-8f70-57ff0f1e601b.png>
 
 
 
