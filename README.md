@@ -166,7 +166,26 @@ As with the models trained on imbalanced data, I evaluated the models based on t
 
 <img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/236191754-1301ad97-9ca7-4785-9f17-0a85e6cdce03.png>
 
+**Validation evaluation**
 
+Although the training datasets were large; 1,338,827 observations for the imbalanced and 2,566,841 observations for the over-sampled training dataset, I was concerned that there would be certain unique patterns in the data based on these observations coming from only 40 unique satellite images; one image from each of the project sites of interest in 2021. Patterns in the data could make the models over-fit, which would limit their generalizability. 
 
+Therefore, I constructed a validation dataset, which consisted of pixel data from images of sites that were included in the AidData geocoded dataset, but not projects of interest and therefore not included in the training and testing data. These sites were not included in the predictive analysis as they were from projects that would not arguably spur localized economic development in a way that would be observable through satellite imagery. This validation dataset consisted of 1,035,561 pixel observations from satellite 26 images. 
 
+The models that performed the best on the validation data were the RF trained on the imbalanced data, the XGBoost trained on the over-sampled data, the RF trained on the over-sampled data and the RF trained on urban over-sampled data, as shown in the table below. The recall values for these models, except XGBoost, are higher for negative observations than positive observations implying the models are underestimating the number of positive observations. 
 
+<img width="700" alt="val_eval_tb" src="https://user-images.githubusercontent.com/78730842/236192622-b14dee30-b7a5-4c4b-8df4-768c623444b6.png">
+
+The plots below show the PR and ROC curves for the models on the validation data. The AUC-PR for the RF models are all similar, with RF over-sampling 0.68, then RF urban over-sampling 0.64 and RF from the imbalanced data at 0.60. The AUC-ROC for these models are also similar, with 0.93 for the RF over-sampling and 0.92 for the others. The XGBoost performance is lower, 0.26 AUC-PR and 0.89 AUC-ROC are much lower. I found it interesting how, for the RF models, the precision score stays at almost 1.0 until recall reaches around 0.5, then the precision scores drop rapidly.
+
+<img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/236192805-ccf713d8-3d69-46a7-b744-95b388bb9bcb.png>
+
+<img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/236192927-ced44b5b-515b-42f5-abbf-076fc0ad2d2a.png>
+
+**Model application**
+
+My second and third research questions were: Can a trained machine learning model be applied to images of former World Bank project sites in order to predict the development of these sites in comparison to wider regions? and; Does proximity to a World Bank project focusing on infrastructure and local economic development lead to greater development in the Malawian context? In order to address these questions, I had to apply the chosen machine learning model to satellite image data from the same sites for previous years and to data from images of wider regions. I downloaded the pixel data from the same World Bank sites as used in the training data for the years before 2021, images from 2016 – 2020. I then applied the best-performing model, the RF trained on over-sampled data, to this data in order to predict the building development of these sights over this time period.
+
+To address the proximity question, I downloaded pixel data from Sentinel-2 images from around the same project sites, but a rectangle of 25 square kilometers as opposed to the 4 square kilometer regions of interest I had analysed up to this point. For the 4 square kilometer ROIs, the average growth rate per year were: 2017 (0.093), 2018 (0.186), 2019 (0.076), 2020 (0.775) and 2021 (2.561). The average building growth rate per year was 0.577. For the 25 square kilometer ROIs, the average growth rate per year were: 2017 (0.034), 2018 (0.046), 2019 (0.188), 2020 (0.306) and 2021 (2.906). The average building growth rate per year was 0.634. The average annual growth rate for the 25 square kilometer regions of interest was therefore slightly higher than for the 4 square kilometer regions of interest around the project sites. This implies that the predicted building growth rate for areas in closer proximity to the project sites were actually slightly less than in the wider proximity.
+
+<img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/236193922-fa9dde22-60b7-42b9-9d94-a3e5b0d1ddb3.png>
