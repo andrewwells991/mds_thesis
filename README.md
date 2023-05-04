@@ -147,9 +147,25 @@ As the data was highly imbalanced, I was concerned that the models would under-p
 
 As mentioned above, I also evaluated the models based on the areas under the precision-recall and ROC curves. The results of evaluations can be seen in the figures below.
 
-<img width="700" alt="image" src=https://user-images.githubusercontent.com/78730842/236189923-421a0f0b-d53b-49df-b6e8-ffddcb6386be.png>
+<img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/236189923-421a0f0b-d53b-49df-b6e8-ffddcb6386be.png>
 
-<img width="700" alt="image" src=https://user-images.githubusercontent.com/78730842/236190049-b560ac78-25f0-464d-8f70-57ff0f1e601b.png>
+<img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/236190049-b560ac78-25f0-464d-8f70-57ff0f1e601b.png>
+
+Analysis of the areas under the curve reveal that XGBoost and RF performed the best, both in terms of PR and ROC. The AUC-PR and AUC-ROC were 0.34 and 0.90 for XGBoost; and 0.38 and 0.90 for RF. Although naïve Bayes had the highest positive recall, 0.31, its AUC-PR and AUC-ROC curves was significantly lower than for the XGBoost and RF models. This implies that XGBoost and RF were the best performing models trained on imbalanced data. But there was still a concern that due to their low positive recall scores; 0.10 for XGBoost and 0.15 for RF, they would systematically underestimate building counts.
+
+Based on the comparatively good performance of the XGBoost and RF models on the imbalanced data, I used these algorithms to train models on the over-sampled data. As mentioned above, I also trained RF models based on urbanity. The table below shows evaluation metrics for each of the models. 
+
+Results table for text evaluations on over-sampled data
+<img width="700" alt="test_eval_tb_over" src="https://user-images.githubusercontent.com/78730842/236191299-6e924fc5-bfd2-4b56-938e-e691ab214009.png">
+
+Having been trained on the over-sampled data, the RF models performed much better on predicting positive observations. The positive recall score for the over-sampled XGBoost model was 0.85 with the negative recall score being 0.80. This implies that that model would over-predict positive observations. But the RF trained on the over-sampled data and the RF models trained on the over-sampled urbanity datasets achieved very higher scores for all metrics, the lowest being 0.97 for the urban RF for positive precision and negative recall.  
+
+As with the models trained on imbalanced data, I evaluated the models based on the areas under the precision-recall and ROC curves. The results of evaluations can be seen in the plots below. This reveals that the RF models performed better than XGBoost. The AUC-PR and AUC-ROC were 0.36 and 0.91 for XGBoost, only nominally better than the XGBoost trained on the imbalanced data. This implies that, although the precision and recall were higher for the XGBoost over-sampled model for positive observations, the lower precision and recall for the negative observations in the over-sampled XGBoost as compared to the imbalanced XGBoost, hurt the over-sampled model’s performance. All of the over-sampled RF models scored 1.00 for the AUC-ROC. The over-sampled RF also scored 1.00 for the AUC-PR. The urbanity over-sampled RF models were tested with observations from the same urbanity. The urban RF model scored the best with 0.89 AUC-PR, then 0.46 for the semi-urban RF and 0.18 for the rural RF.
+
+<img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/236191661-db3821f3-45a0-4c4b-b98d-cc639f3a5b58.png>
+
+<img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/236191754-1301ad97-9ca7-4785-9f17-0a85e6cdce03.png>
+
 
 
 
