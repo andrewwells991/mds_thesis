@@ -8,7 +8,7 @@ This research uses satellite image data along with machine learning algorithms t
 2. Can a trained machine learning model be applied to images of former World Bank project sites in order to predict the development of these sites in comparison to wider regions?
 3. Does proximity to a World Bank project focusing on infrastructure and local economic development lead to greater development in the Malawian context?
 
-# Process for data extraction and cleaning
+# Data used and processes
 
 **AidData geocoded World Bank projects** 
 
@@ -92,14 +92,61 @@ The figure below demonstrates the average band values for pixels which are part 
 Average spectral band values by building label
 <img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/235947160-1d0e6962-bb0c-4517-8b7c-08f9722e6c0b.png>
 
+Spectral band value distributions
+<img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/236177904-d8ffff05-0754-408c-935e-4e8f6f79b729.png>
 
-**Machine learning**
+# Machine learning
 
-Labeled variable (y): building (1/0)
-Feature names (X): bands values (red, green, blue, infrared, short-wave infrared 1 and short-wave infrared 2)
+**Explanation of algorithms**
 
-Train and test various machine learning categorization methods – RF, BoostedDT, SVM, KNN, neural net (?)
+***Naive Bayes***
 
-Download the pixel band data for Sentinel-2 images for the same regions of interest for 2017, 2018, 2019, 2020 and 2022.
+The naive Bayes classifier simplifies learning by assuming that features are independent given classes. Although independence is generally a poor assumption, in practice naïve Bayes often performs well as classification error is not necessarily related to the quality of the fit to a probability distribution.
 
-Once a proper ML tool is chosen for predicting pixels as being building or not building for each region of interest (for August 2021), apply it to the images from that same region or interest for the other years 2017, 2018, 2019, 2020 and 2022 in order to predict which pixels are buildings (and not buildings). Compare the predicted presence of buildings in the images at each region of interest to estimate the development of buildings over time at the World Bank project sites. 
+***Logistic regression***
+
+Logistic regression is a maximum likelihood classification that, as a supervised machine learning algorithm developed for learning classification problems, maximizes the likelihood of classification.
+
+***Extreme gradient boosting***
+
+Extreme gradient boosting (XGBoost) is an implementation of gradient boosting, a technique that combines several weak models into a stronger ensemble model \citep{geron_hands--machine_2019}. The algorithm works by iteratively training a series of decision trees on the training data, where each subsequent tree tries to correct the errors of the previous tree. XGBoost minimizes the sum of the loss function and a regularization term, which helps to prevent over-fitting.
+
+***Random forest***
+
+Random forests (RF) are an ensemble learning method that use multiple decision trees. A decision tree is a machine learning algorithm that recursively partitions the feature space into smaller and smaller subsets based on the values of the input features. Each decision tree in the RF is trained on a random subset of the training data and a random subset of the features. The final prediction of the RF is made by aggregating the predictions of all the decision trees in the forest.
+
+**Model training**
+
+With the initial labelled dataset of 1,633,659 unique pixel observations, I trained models with the algorithms described above on a subsample of 80% of the dataset, the remaining 20% of observations were reserved for model testing. 
+
+I was concerned that the highly imbalanced nature of the data, with positive observations only making up 4.223\% of total observations, would lead the trained models to underestimate positive predictions. Therefore, I balanced the data through over-sampling. This was achieved by replicating the minority class, building = 1. Another technique for balancing a dataset is under-sampling, which reduces the number of majority observations. But research has shown that models trained on over-sampled data perform better than those trained on under-sampled data. The over-sampled dataset consisted of 3,208,552 observations. As the XGBoost and RF models trained on the imbalanced data performed best, I trained them also on the over-sampled data.
+
+I was also curious if models trained based on urbanity would better predict buildings in images of that same urbanity. I therefore split the initial labelled dataset into three urbanity datasets; urban, semi-urban and rural. I then over-sampled each of these. Based on the strong performance of the RF model trained on over-sampled data, I trained a RF model on each of the over-sampled urbanity datasets. In the end, I trained 10 classification models: 
+
+1. Naïve Bayestrained on imbalanced data
+2. Logistic regression trained on imbalanced data
+3. KNN trained on imbalanced data
+4. XGBoost trained on imbalanced data
+5. RF trained on imbalanced data
+6. XGBoost trained on over-sampled data
+7. RF trained on over-sampled data
+8. RF trained on over-sampled urban data
+9. RF trained on over-sampled semi-urban data
+10. RF trained on over-sampled rural data
+
+# Findings
+
+**Test evaluation**
+
+I first tested the models that were trained on the imbalanced data. The test data, which was 20% of the original dataset, consisted of 334,707 observations, 13,673 (4.259%) were positive observations (building  = 1).  The table below shows four different evaluation metrics for each of the models.
+
+Results table for text evaluations on imbalanced data
+<img width="412" alt="test_eval_tb" src="https://user-images.githubusercontent.com/78730842/236181052-4c185450-9ea8-4092-bd0c-95e7f7e813b1.png">
+
+
+
+
+
+
+
+
