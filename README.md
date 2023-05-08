@@ -112,7 +112,7 @@ Logistic regression is a maximum likelihood classification that, as a supervised
 
 ***Extreme gradient boosting***
 
-Extreme gradient boosting (XGBoost) is an implementation of gradient boosting, a technique that combines several weak models into a stronger ensemble model \citep{geron_hands--machine_2019}. The algorithm works by iteratively training a series of decision trees on the training data, where each subsequent tree tries to correct the errors of the previous tree. XGBoost minimizes the sum of the loss function and a regularization term, which helps to prevent over-fitting.
+Extreme gradient boosting (XGBoost) is an implementation of gradient boosting, a technique that combines several weak models into a stronger ensemble model. The algorithm works by iteratively training a series of decision trees on the training data, where each subsequent tree tries to correct the errors of the previous tree. XGBoost minimizes the sum of the loss function and a regularization term, which helps to prevent over-fitting.
 
 ***Random forest***
 
