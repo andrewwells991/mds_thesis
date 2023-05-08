@@ -76,12 +76,10 @@ I therefore had the buildings data, which gave the polygon coordinates or each b
 This yielded labelled data sets with pixel information: coordinates, band data and building, which could be used to predict building based on the band values. The code for cleaning the pixel and buildings datasets and joining the data based on pixels (coordinate points) within buildins (coordinate polygons) is detailed in the script: **7_pixel_ob_cleaning_merging.ipynb** in this repository. The cleaned datasets were joined with code the in script: **8__labelled_data_joining.ipynb** The combined pixel and building data for each project ROI are stored in datasets in the folder **combined_pixel_ob** within the data folder this repository. 
 
 Google earth Satellite image with Open Buildings Overlay and pixels
+
 <img width="975" alt="image" src="https://user-images.githubusercontent.com/78730842/225679609-d9cccc10-d749-4885-80f0-b71986cecdb4.png">
-This is the same zoom-in of Zomba, Malawi as above.
-Black dots represent pixels not part of a building.
-Blue dots represent pixels part of a building.
-The image shows that the classification of pixels based on their coordinates
-being inside of building polygon coordinates from the Open Buildings dataset was successful. 
+
+This is the same zoom-in of Zomba, Malawi as above. Black dots represent pixels not part of a building. Blue dots represent pixels part of a building. The image shows that the classification of pixels based on their coordinates being inside of building polygon coordinates from the Open Buildings dataset was successful. 
 
 # Data description
 
@@ -90,10 +88,14 @@ The combined pixel-building datasets for each of the ROIs were combined to make 
 The figure, Spectral band value distributions, below demonstrates the average band values for pixels which are part of buildings and not part of buildings. As shown, the blue (B2), green (B3), red (B4) and short-wave infrared 1 (B12) values are all on average higher for pixels that are part of buildings as opposed to those not part of buildings. The near infrared (B8) and short-wave infrared 1 (B11) are on average the same for the different pixel categorizations. The following figure also shows the distribution of band values for pixels labelled building and non-building. The code for exploring the data can be found in the sript: **9_data_exploration.ipynb**.
 
 Average spectral band values by building label
+
 <img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/235947160-1d0e6962-bb0c-4517-8b7c-08f9722e6c0b.png>
 
 Spectral band value distributions
+
 <img width="500" alt="image" src=https://user-images.githubusercontent.com/78730842/236177904-d8ffff05-0754-408c-935e-4e8f6f79b729.png>
+
+Pixel band value distributions, darker shade for building  = 1, lighter shade for building = 0. The plots show that the distribution of values for each spectral band is relatively normally distributed. There is considerable overlap between the distribution of band values for pixels labelled building = 1 and building = 0, especially for B8 (NIR) and B11 (SWIR 1). But the values are higher for building = 1 for B2 (blue), B3 (green), B4 (red) and B12 (SWIR 2).
 
 # Machine learning
 
